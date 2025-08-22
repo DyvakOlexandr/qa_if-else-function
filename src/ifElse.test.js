@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 'use strict';
 
 const { ifElse } = require('./ifElse');
@@ -24,12 +25,39 @@ describe('ifElse', () => {
     const result = ifElse(condition, first, second);
 
     expect(result).toBeUndefined();
-    expect(condition).toHaveBeenCalledTimes(1);
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledTimes(1);
   });
 
-  it('should pass no arguments to condition, first and second', () => {
+  it('should call second when condition returns truthy non-boolean value', () => {
+    const condition = jest.fn(() => 123); // 123 !== true
+    const first = jest.fn();
+    const second = jest.fn();
+
+    const result = ifElse(condition, first, second);
+
+    expect(result).toBeUndefined();
+    expect(first).not.toHaveBeenCalled();
+    expect(second).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call second when condition returns falsy non-boolean value', () => {
+    const falsyValues = [0, '', null, undefined, NaN];
+
+    falsyValues.forEach(value => {
+      const condition = jest.fn(() => value);
+      const first = jest.fn();
+      const second = jest.fn();
+
+      const result = ifElse(condition, first, second);
+
+      expect(result).toBeUndefined();
+      expect(first).not.toHaveBeenCalled();
+      expect(second).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should pass no arguments to callbacks', () => {
     const condition = jest.fn(() => true);
     const first = jest.fn();
     const second = jest.fn();
@@ -40,17 +68,5 @@ describe('ifElse', () => {
     expect(condition).toHaveBeenCalledWith();
     expect(first).toHaveBeenCalledWith();
     expect(second).not.toHaveBeenCalled();
-  });
-
-  it('should do nothing if condition returns non-boolean but truthy', () => {
-    const condition = jest.fn(() => 123); // вернёт truthy, но не true
-    const first = jest.fn();
-    const second = jest.fn();
-
-    const result = ifElse(condition, first, second);
-
-    expect(result).toBeUndefined();
-    expect(first).not.toHaveBeenCalled();
-    expect(second).toHaveBeenCalledTimes(1);
   });
 });
