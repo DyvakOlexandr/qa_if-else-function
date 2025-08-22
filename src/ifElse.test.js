@@ -8,8 +8,9 @@ describe('ifElse', () => {
     const first = jest.fn();
     const second = jest.fn();
 
-    ifElse(condition, first, second);
+    const result = ifElse(condition, first, second);
 
+    expect(result).toBeUndefined();
     expect(condition).toHaveBeenCalledTimes(1);
     expect(first).toHaveBeenCalledTimes(1);
     expect(second).not.toHaveBeenCalled();
@@ -20,8 +21,9 @@ describe('ifElse', () => {
     const first = jest.fn();
     const second = jest.fn();
 
-    ifElse(condition, first, second);
+    const result = ifElse(condition, first, second);
 
+    expect(result).toBeUndefined();
     expect(condition).toHaveBeenCalledTimes(1);
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledTimes(1);
@@ -32,21 +34,22 @@ describe('ifElse', () => {
     const first = jest.fn();
     const second = jest.fn();
 
-    ifElse(condition, first, second);
+    const result = ifElse(condition, first, second);
 
+    expect(result).toBeUndefined();
     expect(condition).toHaveBeenCalledWith();
     expect(first).toHaveBeenCalledWith();
     expect(second).not.toHaveBeenCalled();
   });
 
   it('should do nothing if condition returns non-boolean but truthy', () => {
-    const condition = jest.fn(() => 123); // не строго true
+    const condition = jest.fn(() => 123); // вернёт truthy, но не true
     const first = jest.fn();
     const second = jest.fn();
 
-    ifElse(condition, first, second);
+    const result = ifElse(condition, first, second);
 
-    // должно пойти в else
+    expect(result).toBeUndefined();
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledTimes(1);
   });
